@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="jumbo">
+    <h2>Welcome to the Multi shell<h2>
+    <h3>This is the homepage for security check to server.<h3>
+    <small>Site optimized for chrome and firefox.</small>
+  </div>
+
+
+<h3>Command</h3>
+<form action="/command" method="post" name="command" onSubmit="return post_check();">
+  <p>ID <input type="text" value="{{id}}" name="username" size="7"></p>
+  <p>PW <input type="password" value="{{password}}" name="password"></p>
+  <p>IP List (ex. xxx.xxx.xxx.xxx,yyy.yyy.yyy.yyy,zzz.zzz.zzz.zzz)<input type="text" name="iplist" value="{{hosts}}"></p>
+  <p>Command<input type="text" name="command"></p>
+  <p><input type="submit" value="Request"></p>
+</form>
+
+{% if commandPagination %}
+<h3>Result</h3>
+     {{ commandPagination.info }}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="row">IDX</th>
+                    <th scope="row">Host</th>
+                    <th scope="row">Result</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for commandResult in commandResults %}
+                <tr>
+                    <th>{{ loop.index }}</th>
+                    <td><strong>{{ commandResult.host }}</strong></td>
+                    <td>{% autoescape off %}{{ commandResult.result }}{% endautoescape %}</td>
+                    <td></td>
+                </tr>
+          {% else %}
+                <tr><td><em>Unbelievable.  No entries here so far</em></td></tr>
+          {% endfor %}
+            </tbody>
+         </table>
+    </div>
+    {{ commandPagination.links }}
+{% endif %}
+{% endblock %}
