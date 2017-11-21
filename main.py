@@ -22,6 +22,11 @@ def LinuxProcess(connect_data, hostname):
     return {'host':hostname, 'result':stdout.read().replace('\n', '<br />')}
 
 
+@app.route("/upload", methods=['POST'])
+def uploadtest(error=None):
+    print 'test'
+
+
 @app.route("/command", methods=['POST'])
 def command(error=None):
     workerManager = Manager()
