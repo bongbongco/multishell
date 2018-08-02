@@ -17,10 +17,10 @@
   <p><input type="submit" value="Request"></p>
 </form>
 
-{% if commandPagination %}
+{% if commandResults %}
 <h3>Result</h3>
-     {{ commandPagination.info }}
     <div class="table-responsive">
+		<h4>Table</h4>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -43,6 +43,11 @@
             </tbody>
          </table>
     </div>
-    {{ commandPagination.links }}
+	<h4>Raw</h4>
+	<div class="raw-data">
+          {% for commandResult in commandResults %}
+			<pre>{{ loop.index }}	{{ commandResult.host }}	{% autoescape off %}{{ commandResult.result }}{% endautoescape %}</pre>
+          {% endfor %}
+	</div>
 {% endif %}
 {% endblock %}

@@ -6,6 +6,7 @@ import paramiko
 from multiprocessing import Pool, Manager
 import webbrowser
 from functools import partial
+import sys
 
 app = Flask(__name__)
 
@@ -17,14 +18,18 @@ def LinuxProcess(connect_data, hostname):
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname, username=user, password=pw)
-    stdin, stdout, stderr = ssh.exec_command(exec_command)
-    return {'host':hostname, 'result':stdout.read().replace('\n', '<br />')}
+    
+    try:
+        ssh.connect(hostname, username=user, password=pw)
+        stdin, stdout, stderr = ssh.exec_command(exec_command)
+        return {'host':hostname, 'result':stdout.read().replace('\n', '<br />')}
+    except:
+        return {'host':hostname, 'result':"Connection Fail"}
 
 
 @app.route("/upload", methods=['POST'])
 def uploadtest(error=None):
-    print 'test'
+    print('test')
 
 
 @app.route("/command", methods=['POST'])
@@ -37,14 +42,11 @@ def command(error=None):
 
     pool = Pool(len(request.form['iplist'].split(',')))
 
-    try:
-        commandResults = pool.map(LinuxProcess_connectData, request.form['iplist'].split(','))
-    except:
-        error = "Fail Excute Command"
+    commandResults = pool.map(LinuxProcess_connectData, request.form['iplist'].split(','))
 
     pool.close()
     pool.join()
-
+    '''
     commandPagination = Pagination(
         css_framework='bootstrap4',
         link_size='sm',
@@ -56,11 +58,11 @@ def command(error=None):
         record_name='commandResults',
         format_total=True,
         format_number=True,)
-
+    '''
 
     return render_template('home.html',
                            commandResults=commandResults,
-                           commandPagination=commandPagination,
+                           #commandPagination=commandPagination,
                            id=request.form['username'],
                            password=request.form['password'],
                            hosts=request.form['iplist'],
