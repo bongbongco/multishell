@@ -22,7 +22,7 @@ def LinuxProcess(connect_data, hostname):
     try:
         ssh.connect(hostname, username=user, password=pw)
         stdin, stdout, stderr = ssh.exec_command(exec_command)
-        return {'host':hostname, 'result':stdout.read().replace('\n', '<br />')}
+        return {'host':hostname, 'result':stdout.read().replace('\n', '&#9;')}
     except:
         return {'host':hostname, 'result':"Connection Fail"}
 
